@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { Info, Flame, AlertTriangle, Cookie } from 'lucide-react';
+import { Info, ChevronDown, AlertTriangle, Cookie } from 'lucide-react';
 import InstructionsSection from './InstructionsSection';
 import InfoCard from './InfoCard';
 import './App.css'
+import NavBar from './NavBar';
+import OrderLabel from './OrderLabel';
+import Pricing from './pricing';
+
+
 
 function App() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 100);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const steps = [
@@ -34,6 +49,8 @@ function App() {
     }
   ];
 
+  const year = new Date().getFullYear();
+
   return (
     <div className="app-wrapper">
       
@@ -41,19 +58,12 @@ function App() {
 
       <img className="background-cookie2" src="/cookie.png" alt="Just a cookie" />
 
+      <NavBar />
 
-      <div className="bg-decor">
-        <div className="blob-1"></div>
-        <div className="blob-2"></div>
-      </div>
 
       <div className="content-container">
-        <div className={`top-nav ${isVisible ? 'visible' : ''}`}>
-          <a href="http://wa.me/972525565860" className="phone-btn">
-            <h3>להזמנות</h3>
-            <img src="WhatsApp_icon.gif" alt="" />
-          </a>
-        </div>
+        
+        <OrderLabel isVisible={isVisible} isScrolled={isScrolled} />
 
         {/* Hero */}
         <header className={`hero ${isVisible ? 'visible' : ''}`}>
@@ -69,19 +79,34 @@ function App() {
             <span className="main-title">ומלח ים אטלנטי</span>
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', opacity: 0.8 }}>
-            {/* <Flame size={20} color="#f97316" className='flame' /> */}
             מוכנות לאפייה
+          </div>
+
+          <div className='cat-talking'>
+            <img src="/cat_talking.png" alt="" />
+          </div>
+
+          <div className='arrow-down-container'>
+            <a href="#instructions">
+              <ChevronDown size={40} color='#431e6c' className='arrow-down'/>
+            </a>
           </div>
 
         </header>
 
-        {/* שלבי הכנה */}
-        <InstructionsSection steps={steps} isVisible={isVisible} />
+       
+
+        <div id='instructions'>
+          <InstructionsSection steps={steps} isVisible={isVisible} />
+        </div>       
 
         <img className="cat-head" src="/head_cat.png" alt="" />
 
-        {/* מידע נוסף */}
-        <div className={`info-grid ${isVisible ? 'visible' : ''}`}>
+        <div id='pricing'>
+          <Pricing />
+        </div>
+        
+        <div id='ingredients' className={`info-grid ${isVisible ? 'visible' : ''}`}>
           
           <InfoCard
             color="purple"
@@ -111,12 +136,8 @@ function App() {
 
         {/* Footer Mascot */}
         <footer className="mascot-footer">
-          <a href="http://wa.me/972525565860" className="phone-btn">
-              <h3>להזמנות</h3>
-              <img src="WhatsApp_icon.gif" alt="" />
-          </a>
           <p style={{ marginTop: '20px', fontSize: '12px', fontWeight: 900, opacity: 0.4, direction: 'ltr' }}>
-             FUFI'ZZZ BY YOTAM DAHAN © 2026
+             FUFI'ZZZ BY YOTAM DAHAN © {year}
           </p>
         </footer>
       </div>
